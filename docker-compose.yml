@@ -1,13 +1,19 @@
-version: '3'
-
 services:
-  suno-api:
+  suno:
+    working_dir: /home/app/suno
     build:
-      context: .
-      args:
-        SUNO_COOKIE: ${SUNO_COOKIE}
-    volumes:
-      - ./public:/app/public
+      context: ./
+      dockerfile: Dockerfile
     ports:
-      - "3000:3000"
-    env_file: ".env"
+      - "${APP_PORT}:3000"
+    expose:
+      - "3000"
+    restart: on-failure
+    networks:
+      - proxy-net
+    env_file:
+      - .env
+
+networks:
+  proxy-net:
+    driver: bridge
